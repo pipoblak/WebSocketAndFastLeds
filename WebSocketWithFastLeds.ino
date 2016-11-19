@@ -61,7 +61,6 @@ void initializeStrips(){
 
 //------------------------------------- WEBSOCKET EVENT ----------------------------- x x x x x  ----------------------
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght) {
-  Serial.printf("[%s] func: %s line: %d\n", __FILE__, __func__, __LINE__ ); 
   switch (type) {
     case WStype_DISCONNECTED:
       Serial.printf("[%u] Disconnected!\n", num);
@@ -92,7 +91,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght
 
         //SETTING RGB like #R255G255B255S0
         if (payload[0] == '#') {
-          Serial.println("SET RGB Event");
           for (int iC = 1; iC <= lenght; iC++) {
             if (payload[iC] == 'R')
               indexR = iC;
@@ -109,7 +107,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght
           commandBalance = "";
           char char_array[lenght];
           command.toCharArray(char_array, lenght + 1);
-
+          Serial.println(command);
           for (int cont = indexS + 1; cont <= lenght; cont++) {
             commandBalance.concat(char_array[cont]);
  
@@ -171,8 +169,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght
 
 
         if (payload[0] == '@') {
-
-Serial.printf("[%s] func: %s line: %d\n", __FILE__, __func__, __LINE__ ); 
           Serial.println("SELECT EVENT EVENT");
           for (int iC = 1; iC <= lenght; iC++) {
             if (payload[iC] == 'D')
@@ -253,14 +249,13 @@ Serial.printf("[%s] func: %s line: %d\n", __FILE__, __func__, __LINE__ );
 //------------------------------------------------------------------ x x x x x  ------------------------------------------------------
 
 void webSocketRun() {
-          Serial.printf("[%s] func: %s line: %d\n", __FILE__, __func__, __LINE__ );
+
   webSocket.loop();
-          Serial.printf("[%s] func: %s line: %d\n", __FILE__, __func__, __LINE__ );
 }
 
 
 void lightCall(){
-          Serial.printf("[%s] func: %s line: %d\n", __FILE__, __func__, __LINE__ );
+   
   //STRIP 1 EVENT
   switch(strip1Event){
     case 0:{
@@ -465,7 +460,6 @@ void simpleRainbow(int SpeedDelay, int stripID) {
   }
 
   if (contTempo >= SpeedDelay) {
-        Serial.printf("[%s] func: %s line: %d\n", __FILE__, __func__, __LINE__ );
     for (int i = 0; i < numberLeds; i++) {
       c = Wheel(((i * 256 / numberLeds) + cont) & 255);
       setPixel(i, *c, *(c + 1), *(c + 2), stripID);
@@ -494,7 +488,6 @@ void simpleRainbow(int SpeedDelay, int stripID) {
 
 //SINCRO RAINBOW
 void sincroRainbow(int SpeedDelay) {
-          Serial.printf("[%s] func: %s line: %d\n", __FILE__, __func__, __LINE__ );
   byte *c;
   int contTempo;
   int numberLeds;
