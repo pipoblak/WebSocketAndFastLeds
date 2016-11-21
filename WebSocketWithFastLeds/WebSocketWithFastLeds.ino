@@ -1,14 +1,16 @@
+#define FASTLED_ESP8266_NODEMCU_PIN_ORDER
+#include "FastLED.h"
 #include <Arduino.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266WiFi.h>
-#include "FastLED.h"
+
 #include <Thread.h>
 #include <ThreadController.h>
 #include <WebSocketsServer.h>
 
 //Wifi Settings
-const char* ssid     = "Familia Ramos";
-const char* password = "cordasvi123";
+const char* ssid     = "RocketzNode";
+const char* password = "node1708";
 
 //THREADS
 ThreadController controll = ThreadController();
@@ -16,12 +18,12 @@ Thread threadRead = Thread();
 Thread threadLight = Thread();
 
 //SETTING STRIPS
-#define PIN D1
-#define NUM_LEDS 300
-#define PIN2 D2
-#define NUM_LEDS2 300
-#define PIN3 D3
-#define NUM_LEDS3 0
+#define PIN 1
+#define NUM_LEDS 0
+#define PIN2 2
+#define NUM_LEDS2 368
+#define PIN3 3
+#define NUM_LEDS3 288
 
 //CREATING STRIPS
 CRGB strip1[NUM_LEDS];
@@ -34,9 +36,9 @@ int strip2Event;
 int strip3Event;
 
 //STRIP RGBS
-int r1,g1,b1;
-int r2,g2,b2;
-int r3,g3,b3;
+int r1=0,g1=0,b1=255;
+int r2=0,g2=0,b2=255;
+int r3=0,g3=0,b3=255;
 
 //STRIP COUNTERS
 int strip1Count;
@@ -52,12 +54,7 @@ int Speed = 5;
 //WEBSOCKET SERVER
 WebSocketsServer webSocket = WebSocketsServer(81);
 
-//INITIALIZE ALL STRIPS
-void initializeStrips(){
- FastLED.addLeds<WS2812B, PIN, GRB>(strip1, NUM_LEDS).setCorrection( TypicalLEDStrip );
- FastLED.addLeds<WS2812B, PIN2, GRB>(strip2, NUM_LEDS2).setCorrection( TypicalLEDStrip );
- FastLED.addLeds<WS2812B, PIN3, GRB>(strip3, NUM_LEDS3).setCorrection( TypicalLEDStrip );
-}
+
 
 //------------------------------------- WEBSOCKET EVENT ----------------------------- x x x x x  ----------------------
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght) {
@@ -335,12 +332,15 @@ void setup(){
   
   MDNS.addService("ws", "tcp", 81);
   
-  initializeStrips();
+//INITIALIZE ALL STRIPS
+ FastLED.addLeds<WS2812B, PIN, GRB>(strip1, NUM_LEDS).setCorrection( TypicalLEDStrip );
+ FastLED.addLeds<WS2812B, PIN2, GRB>(strip2, NUM_LEDS2).setCorrection( TypicalLEDStrip );
+ FastLED.addLeds<WS2812B, PIN3, GRB>(strip3, NUM_LEDS3).setCorrection( TypicalLEDStrip );
 
   //Setup StartEvents
   strip1Event=0;
-  strip2Event=0;
-  strip3Event=0;
+  strip2Event=1;
+  strip3Event=1;
   
   // start webSocket server
   webSocket.begin();
@@ -463,7 +463,6 @@ void simpleRainbow(int SpeedDelay, int stripID) {
     for (int i = 0; i < numberLeds; i++) {
       c = Wheel(((i * 256 / numberLeds) + cont) & 255);
       setPixel(i, *c, *(c + 1), *(c + 2), stripID);
-      delay(0);
     }
 
     contTempo = 0;
@@ -479,7 +478,7 @@ void simpleRainbow(int SpeedDelay, int stripID) {
       strip3Count = contTempo;
       strip3CountJ++;
     }
-
+  //Serial.printf("[%s] func: %s line: %d\n", __FILE__, __func__, __LINE__ ); 
     showStrip();
   }
 
