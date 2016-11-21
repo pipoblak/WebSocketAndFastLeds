@@ -19,11 +19,11 @@ Thread threadLight = Thread();
 
 //SETTING STRIPS
 #define PIN 1
-#define NUM_LEDS 0
+#define NUM_LEDS 247
 #define PIN2 2
-#define NUM_LEDS2 368
+#define NUM_LEDS2 433
 #define PIN3 3
-#define NUM_LEDS3 288
+#define NUM_LEDS3 372
 
 //CREATING STRIPS
 CRGB strip1[NUM_LEDS];
@@ -265,6 +265,11 @@ void lightCall(){
       }
 
       break;
+    case 2:{
+      sincroRainbow(0);
+      }
+
+      break;
     }
 
   //STRIP 2 EVENT
@@ -279,6 +284,11 @@ void lightCall(){
       }
 
       break;
+    case 2:{
+    
+    }
+
+      break;
     }
 
   //STRIP 3 EVENT
@@ -290,6 +300,11 @@ void lightCall(){
       break;
     case 1:{
       setAll(r3,g3,b3,3);
+      }
+
+      break;
+    case 2:{
+      
       }
 
       break;
@@ -338,9 +353,9 @@ void setup(){
  FastLED.addLeds<WS2812B, PIN3, GRB>(strip3, NUM_LEDS3).setCorrection( TypicalLEDStrip );
 
   //Setup StartEvents
-  strip1Event=0;
-  strip2Event=1;
-  strip3Event=1;
+  strip1Event=2;
+  strip2Event=2;
+  strip3Event=2;
   
   // start webSocket server
   webSocket.begin();
@@ -365,6 +380,7 @@ void loop(){
 //SHOW SPECIFC STRIP
 void showStrip() {
  FastLED.show();
+ 
    }
 
 //SET A SPECIFC PIXEL INTO A SPECIFC STRIP
