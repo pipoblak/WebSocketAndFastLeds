@@ -20,11 +20,11 @@ Thread threadLight = Thread();
 
 //SETTING STRIPS
 #define PIN 2
-#define NUM_LEDS 247
+#define NUM_LEDS 875
 #define PIN2 1
-#define NUM_LEDS2 433
+#define NUM_LEDS2 0
 #define PIN3 5
-#define NUM_LEDS3 372
+#define NUM_LEDS3 0
 
 //CREATING STRIPS
 CRGB strip1[NUM_LEDS];
@@ -59,7 +59,6 @@ WebSocketsServer webSocket = WebSocketsServer(81);
 
 //------------------------------------- WEBSOCKET EVENT ----------------------------- x x x x x  ----------------------
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght) {
-    Serial.printf("[%s] func: %s line: %d\n", __FILE__, __func__, __LINE__ ); 
   switch (type) {
     case WStype_DISCONNECTED:
       Serial.printf("[%u] Disconnected!\n", num);
@@ -356,9 +355,9 @@ void setup(){
  FastLED.addLeds<WS2812B, PIN3, GRB>(strip3, NUM_LEDS3).setCorrection( TypicalLEDStrip );
 
   //Setup StartEvents
-  strip1Event=2;
-  strip2Event=2;
-  strip3Event=2;
+  strip1Event=0;
+  strip2Event=3;
+  strip3Event=3;
   
   // start webSocket server
   webSocket.begin();
@@ -369,7 +368,7 @@ void setup(){
   threadRead.setInterval(1);
 
   threadLight.onRun(lightCall);
-  threadLight.setInterval(1);
+  threadLight.setInterval(2);
 
   controll.add(&threadRead);
   controll.add(&threadLight);
@@ -383,12 +382,12 @@ void loop(){
 //SHOW SPECIFC STRIP
 void showStrip() {
  FastLED.show();
-   Serial.printf("[%s] func: %s line: %d\n", __FILE__, __func__, __LINE__ ); 
+
    }
 
 //SET A SPECIFC PIXEL INTO A SPECIFC STRIP
 void setPixel(int Pixel, byte red, byte green, byte blue, int stripID) {
-    Serial.printf("[%s] func: %s line: %d\n", __FILE__, __func__, __LINE__ ); 
+
     if (stripID == 1) {
       strip1[Pixel].r=red;
       strip1[Pixel].g=green;
@@ -408,7 +407,7 @@ void setPixel(int Pixel, byte red, byte green, byte blue, int stripID) {
 
 //SET ALL PIXELS TO A SPECIFC STRIP
 void setAll(byte red, byte green, byte blue, int stripID) {
-        Serial.printf("[%s] func: %s line: %d\n", __FILE__, __func__, __LINE__ ); 
+
   int numberLeds;
   if (stripID == 1) {
     numberLeds = NUM_LEDS;
@@ -429,7 +428,6 @@ void setAll(byte red, byte green, byte blue, int stripID) {
 
 //WHEEL FOR RAINBOW
 byte * Wheel(byte WheelPos) {
-      Serial.printf("[%s] func: %s line: %d\n", __FILE__, __func__, __LINE__ );     
   static byte c[3];
 
   if (WheelPos < 85) {
@@ -453,7 +451,6 @@ byte * Wheel(byte WheelPos) {
 
 
 void simpleRainbow(int SpeedDelay, int stripID) {
-        Serial.printf("[%s] func: %s line: %d\n", __FILE__, __func__, __LINE__ );    
   byte *c;
   int contTempo;
   int numberLeds;
@@ -497,7 +494,6 @@ void simpleRainbow(int SpeedDelay, int stripID) {
       strip3Count = contTempo;
       strip3CountJ++;
     }
-  //Serial.printf("[%s] func: %s line: %d\n", __FILE__, __func__, __LINE__ ); 
     showStrip();
   }
 
@@ -515,7 +511,6 @@ void sincroRainbow(int SpeedDelay) {
   contTempo = strip1Count;
   strip1Count++;
   cont = strip1CountJ;
-  Serial.printf("[%s] func: %s line: %d\n", __FILE__, __func__, __LINE__ ); 
   if (contTempo >= SpeedDelay) {
 
     for (int i = 0; i <= numberLeds; i++) {
