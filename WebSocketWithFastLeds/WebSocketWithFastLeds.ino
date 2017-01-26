@@ -26,6 +26,11 @@ Thread threadLight = Thread();
 #define PIN3 5
 #define NUM_LEDS3 0
 
+//ACTIVE STRIPS
+boolean isActiveStrip1=true;
+boolean isActiveStrip2=false;
+boolean isActiveStrip3=false;
+
 //CREATING STRIPS
 CRGB strip1[NUM_LEDS];
 CRGB strip2[NUM_LEDS2];
@@ -256,6 +261,7 @@ void webSocketRun() {
 void lightCall(){
    
   //STRIP 1 EVENT
+  if(isActiveStrip1)
   switch(strip1Event){
     case 0:{
       simpleRainbow(0,1);
@@ -275,6 +281,7 @@ void lightCall(){
     }
 
   //STRIP 2 EVENT
+  if(isActiveStrip2)
   switch(strip2Event){
     case 0:{
       simpleRainbow(0,2);
@@ -294,6 +301,7 @@ void lightCall(){
     }
 
   //STRIP 3 EVENT
+  if(isActiveStrip3)
   switch(strip3Event){
     case 0:{
       simpleRainbow(0,3);
@@ -356,8 +364,8 @@ void setup(){
 
   //Setup StartEvents
   strip1Event=0;
-  strip2Event=3;
-  strip3Event=3;
+  strip2Event=2;
+  strip3Event=2;
   
   // start webSocket server
   webSocket.begin();
